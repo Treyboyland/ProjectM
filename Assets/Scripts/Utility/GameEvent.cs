@@ -46,21 +46,40 @@ public class GameEvent<T> : ScriptableObject
 {
     protected List<GameEventListener<T>> listeners = new List<GameEventListener<T>>();
 
-    public void AddListener(GameEventListener<T> listener)
+    protected virtual void Clean()
     {
-        foreach (var obj in listeners)
+        for (int i = listeners.Count - 1; i > 0; i--)
         {
-            if (obj == listener)
+            if (listeners[i] == null)
             {
-                return;
+                listeners.RemoveAt(i);
             }
         }
-
-        listeners.Add(listener);
     }
 
-    public void RemoveListener(GameEventListener<T> listener)
+    protected virtual void OnEnable()
     {
+        Clean();
+    }
+
+    public virtual void AddListener(GameEventListener<T> listener)
+    {
+        Debug.LogWarning(name + ": Listener added: " + listener.name);
+        // foreach (var obj in listeners)
+        // {
+        //     if (obj == listener)
+        //     {
+        //         return;
+        //     }
+        // }
+
+        listeners.Add(listener);
+        Clean();
+    }
+
+    public virtual void RemoveListener(GameEventListener<T> listener)
+    {
+        Debug.LogWarning(name + " Remove Listener: " + listener.name);
         for (int i = listeners.Count - 1; i > 0; i--)
         {
             if (listeners[i] == listener)
@@ -68,13 +87,20 @@ public class GameEvent<T> : ScriptableObject
                 listeners.RemoveAt(i);
             }
         }
+        Clean();
     }
 
-    public void Invoke(T value)
+    public virtual void Invoke(T value)
     {
+        Debug.LogWarning(name + "Invoking");
         foreach (var listener in listeners)
         {
-            listener.Response.Invoke(value);
+            if (listener != null)
+            {
+                Debug.LogWarning(name + " Test: " + listener);
+                Debug.LogWarning(name + "Invokng Listener: " + listener.gameObject.name);
+                listener.Response.Invoke(value);
+            }
         }
     }
 }

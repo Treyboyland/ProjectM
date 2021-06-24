@@ -10,12 +10,12 @@ public class GameEventListener<T> : MonoBehaviour
 
     public UnityEvent<T> Response;
 
-    protected void OnEnable()
+    protected virtual void OnEnable()
     {
         Event.AddListener(this);
     }
 
-    protected void OnDisable()
+    protected virtual void OnDisable()
     {
         Event.RemoveListener(this);
     }
