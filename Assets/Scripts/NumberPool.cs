@@ -40,11 +40,15 @@ public class NumberPool : MonoBehaviour
         {
             if (!num.gameObject.activeInHierarchy)
             {
+                num.Value = value;
                 return num;
             }
         }
 
-        return GetNumber();
+        var newNum = GetNumber();
+        newNum.Value = value;
+
+        return newNum;
     }
 
     public void SpawnNumberNoReturn(int value)

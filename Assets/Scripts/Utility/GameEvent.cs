@@ -7,15 +7,32 @@ public class GameEvent : ScriptableObject
 {
     List<GameEventListener> listeners = new List<GameEventListener>();
 
-    public void AddListener(GameEventListener listener)
+    protected virtual void Clean()
     {
-        foreach (var obj in listeners)
+        for (int i = listeners.Count - 1; i > 0; i--)
         {
-            if (obj == listener)
+            if (listeners[i] == null)
             {
-                return;
+                listeners.RemoveAt(i);
             }
         }
+    }
+
+    protected virtual void OnEnable()
+    {
+        Clean();
+    }
+
+
+    public void AddListener(GameEventListener listener)
+    {
+        // foreach (var obj in listeners)
+        // {
+        //     if (obj == listener)
+        //     {
+        //         return;
+        //     }
+        // }
 
         listeners.Add(listener);
     }
@@ -35,7 +52,10 @@ public class GameEvent : ScriptableObject
     {
         foreach (var listener in listeners)
         {
-            listener.Response.Invoke();
+            if (listener != null)
+            {
+                listener.Response.Invoke();
+            }
         }
     }
 }
@@ -64,7 +84,7 @@ public class GameEvent<T> : ScriptableObject
 
     public virtual void AddListener(GameEventListener<T> listener)
     {
-        Debug.LogWarning(name + ": Listener added: " + listener.name);
+        // Debug.LogWarning(name + ": Listener added: " + listener.name);
         // foreach (var obj in listeners)
         // {
         //     if (obj == listener)
@@ -79,7 +99,7 @@ public class GameEvent<T> : ScriptableObject
 
     public virtual void RemoveListener(GameEventListener<T> listener)
     {
-        Debug.LogWarning(name + " Remove Listener: " + listener.name);
+        //Debug.LogWarning(name + " Remove Listener: " + listener.name);
         for (int i = listeners.Count - 1; i > 0; i--)
         {
             if (listeners[i] == listener)
@@ -92,13 +112,13 @@ public class GameEvent<T> : ScriptableObject
 
     public virtual void Invoke(T value)
     {
-        Debug.LogWarning(name + "Invoking");
+        //Debug.LogWarning(name + "Invoking");
         foreach (var listener in listeners)
         {
             if (listener != null)
             {
-                Debug.LogWarning(name + " Test: " + listener);
-                Debug.LogWarning(name + "Invokng Listener: " + listener.gameObject.name);
+                //Debug.LogWarning(name + " Test: " + listener);
+                //Debug.LogWarning(name + "Invokng Listener: " + listener.gameObject.name);
                 listener.Response.Invoke(value);
             }
         }

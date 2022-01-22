@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
 
     int currentSpawns = 0;
 
+    public int CurrentSpawns { get { return currentSpawns; } set { currentSpawns = value; } }
+
     [SerializeField]
     GameEventInt spawnBit;
 
@@ -34,6 +36,7 @@ public class Player : MonoBehaviour
         {
             currentSpawns++;
             spawnBit.Invoke(value);
+            currentScore += value;
         }
     }
 
